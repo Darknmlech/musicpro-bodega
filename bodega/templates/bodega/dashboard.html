@@ -1,0 +1,47 @@
+{% extends 'bodega/base.html' %}
+
+{% block title %}Dashboard - Music Pro{% endblock %}
+
+{% block content %}
+<h2 class="h3 mb-4 text-secondary">Resumen General de Bodega</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Total Productos Registrados</h5>
+                <p class="display-5 fw-bold mb-0">{{ total_productos }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-warning text-dark shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Alertas de Stock Bajo</h5>
+                <p class="display-5 fw-bold mb-0">{{ alertas_stock }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="card-title mb-0">Últimos Movimientos</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            {% for mov in ultimos_movimientos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ mov.tipo }}:</strong> {{ mov.producto }} ({{ mov.cantidad }} unidades)
+                    <br><small class="text-muted">Por {{ mov.usuario }} el {{ mov.fecha }}</small>
+                </div>
+                <span class="badge {% if mov.tipo == 'Ingreso' %}bg-success{% else %}bg-primary{% endif %}">
+                    {{ mov.tipo }}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
