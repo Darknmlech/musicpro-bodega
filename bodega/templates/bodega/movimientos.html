@@ -1,0 +1,42 @@
+{% extends 'bodega/base.html' %}
+
+{% block title %}Movimientos - Music Pro{% endblock %}
+
+{% block content %}
+<h2 class="h3 mb-3 text-secondary">Historial de Movimientos</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Fecha/Hora</th>
+                        <th>Tipo</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Usuario Responsable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mov in movimientos %}
+                    <tr>
+                        <td>{{ mov.fecha }}</td>
+                        <td>
+                            {% if mov.tipo == 'Ingreso' %}
+                                <span class="badge bg-success">Ingreso</span>
+                            {% else %}
+                                <span class="badge bg-primary">Salida</span>
+                            {% endif %}
+                        </td>
+                        <td class="fw-bold">{{ mov.producto }}</td>
+                        <td>{{ mov.cantidad }}</td>
+                        <td>{{ mov.usuario }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
