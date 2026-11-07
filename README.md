@@ -13,7 +13,7 @@ Prototipo web desarrollado en Django para la gestión y control de inventarios d
 
 ## Requisitos e Instalación
 1. Activar el entorno virtual: `venv\Scripts\activate`
-2. Instalar dependencias: `pip install django`, `pip install django faker`, 
+2. Instalar dependencias: `pip install django`, `pip install django faker`, `pip install mysqlclient`
 3. Ejecutar el servidor: `python manage.py runserver`
 
 ## Aplicar migraciones de la base de datos
@@ -21,6 +21,7 @@ python manage.py migrate
 
 ## Poblar la base de datos con datos de prueba
 python poblar.py
+
 
 ## Flujo de Navegación
 [ Dashboard ] -> [ Inventario ] -> [ Movimientos ]

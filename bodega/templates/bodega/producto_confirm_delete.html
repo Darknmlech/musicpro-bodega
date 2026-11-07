@@ -1,0 +1,27 @@
+{% extends 'bodega/base.html' %}
+
+{% block title %}Eliminar Producto - Music Pro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body text-center">
+                <p class="fs-5">¿Estás seguro de que deseas eliminar el producto?</p>
+                <h3 class="text-danger mb-4">{{ producto.nombre }} (SKU: {{ producto.sku }})</h3>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'inventario' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
