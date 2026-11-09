@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Gerencial de Reportes - Music Pro Bodega</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .navbar-custom {
+            background-color: #1e252b;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .navbar-custom .nav-link {
+            color: #b0b7c0;
+            font-weight: 500;
+            margin-right: 15px;
+            transition: color 0.2s;
+        }
+
+        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+            color: #ffffff;
+        }
+
+        .btn-outline-light-custom {
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 0.35rem 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-light-custom:hover {
+            background-color: #ffffff;
+            color: #1e252b;
+        }
+
+        /* Estilos corporativos para los reportes */
+        .report-card {
+            border: 1px solid #e3e6f0;
+            border-radius: 6px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+            margin-bottom: 1.5rem;
+            background: #ffffff;
+        }
+
+        .report-card .card-header {
+            font-weight: 700;
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .nav-tabs .nav-link {
+            color: #4e73df;
+            font-weight: 600;
+            border: none;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #2e59d9;
+            border-bottom: 3px solid #4e73df;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <span>🎸</span> <strong>Music Pro Bodega</strong>
+            </a>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inventario' %}">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'movimientos' %}">Movimientos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'reportes' %}">Reportes</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white">Usuario: <strong>{{ usuario_nombre }}</strong></span>
+                    <a href="{% url 'logout' %}" class="btn-outline-light-custom">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 mb-5">
+        
+        <div class="mb-4">
+            <h2 class="fw-bold text-dark mb-1">Panel Gerencial de Reportes</h2>
+            <p class="text-muted">Módulo centralizado de consultas y análisis de inventario (Music Pro - Bodega).</p>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="reportesTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="basico-tab" data-bs-toggle="tab" data-bs-target="#basico" type="button" role="tab">
+                    Reportes 1
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="intermedio-tab" data-bs-toggle="tab" data-bs-target="#intermedio" type="button" role="tab">
+                    Reportes 2
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="avanzado-tab" data-bs-toggle="tab" data-bs-target="#avanzado" type="button" role="tab">
+                    Reportes 3
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="reportesTabContent">
+            
+            <div class="tab-pane fade show active" id="basico" role="tabpanel">
+                
+                <div class="card report-card">
+                    <div class="card-header bg-dark text-white">
+                        ¿Cuáles son todos los productos registrados en la bodega?
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px;">
+                            <table class="table table-striped mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr><th>SKU</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock Actual</th></tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in productos_todos %}
+                                    <tr>
+                                        <td><code>{{ p.sku }}</code></td>
+                                        <td class="fw-bold">{{ p.nombre }}</td>
+                                        <td>{{ p.categoria.nombre }}</td>
+                                        <td>${{ p.precio }}</td>
+                                        <td><span class="badge bg-secondary">{{ p.stock_actual }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Qué productos pertenecen a una categoría seleccionada?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-9">
+                                <select name="categoria_id" class="form-select" required>
+                                    <option value="">-- Seleccione una categoría --</option>
+                                    {% for cat in categorias %}
+                                    <option value="{{ cat.id }}" {% if request.GET.categoria_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary w-100">Filtrar Categoría</button>
+                            </div>
+                        </form>
+                        {% if request.GET.categoria_id %}
+                        <table class="table table-striped align-middle mb-0">
+                            <thead><tr><th>SKU</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_por_cat_seleccionada %}
+                                <tr><td>{{ p.sku }}</td><td>{{ p.nombre }}</td><td>${{ p.precio }}</td><td>{{ p.stock_actual }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center text-muted">No hay productos en esta categoría.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-danger text-white">
+                        ¿Cuáles son los productos cuyo stock está por debajo del mínimo establecido?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light"><tr><th>SKU</th><th>Nombre</th><th>Stock Actual</th><th>Stock Mínimo</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_criticos %}
+                                <tr><td>{{ p.sku }}</td><td class="fw-bold">{{ p.nombre }}</td><td><span class="badge bg-danger">{{ p.stock_actual }}</span></td><td>{{ p.stock_minimo }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center text-muted py-3">No hay alertas de stock crítico.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-dark text-white">
+                        ¿Cuáles son los 10 productos con mayor precio?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead class="table-light"><tr><th>SKU</th><th>Nombre</th><th>Precio</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_caros %}
+                                <tr><td>{{ p.sku }}</td><td>{{ p.nombre }}</td><td class="fw-bold text-success">${{ p.precio }}</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-secondary text-white">
+                        ¿Cuántos productos existen registrados por categoría?
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for cat in productos_por_categoria %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ cat.categoria__nombre|default:"Sin Categoría" }}
+                                <span class="badge bg-primary rounded-pill">{{ cat.total }} productos</span>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-center text-muted">No hay registros.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="intermedio" role="tabpanel">
+                
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Qué productos suministra un proveedor/marca seleccionado?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-9">
+                                <select name="marca_id" class="form-select" required>
+                                    <option value="">-- Seleccione Proveedor / Marca --</option>
+                                    {% for m in marcas %}
+                                    <option value="{{ m.id }}" {% if request.GET.marca_id == m.id|stringformat:"s" %}selected{% endif %}>{{ m.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3"><button type="submit" class="btn btn-dark w-100">Consultar</button></div>
+                        </form>
+                        {% if request.GET.marca_id %}
+                        <table class="table table-striped align-middle">
+                            <thead><tr><th>SKU</th><th>Nombre Producto</th><th>Precio</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_por_marca %}
+                                <tr><td>{{ p.sku }}</td><td>{{ p.nombre }}</td><td>${{ p.precio }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No existen productos registrados para esta marca/proveedor.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Cuáles son las solicitudes realizadas por una sucursal específica?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-9">
+                                <select name="sucursal_id" class="form-select" required>
+                                    <option value="">-- Seleccione Sucursal --</option>
+                                    {% for s in sucursales %}
+                                    <option value="{{ s.id }}" {% if request.GET.sucursal_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3"><button type="submit" class="btn btn-primary w-100">Filtrar Sucursal</button></div>
+                        </form>
+                        {% if request.GET.sucursal_id %}
+                        <table class="table table-bordered align-middle">
+                            <thead><tr><th>ID Orden</th><th>Fecha y Hora</th><th>Tipo Movimiento</th></tr></thead>
+                            <tbody>
+                                {% for o in ordenes_por_sucursal %}
+                                <tr><td>#{{ o.id }}</td><td>{{ o.fecha_hora|date:"Y-m-d H:i" }}</td><td>{{ o.tipo.nombre }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No hay solicitudes registradas para esta sucursal.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Qué productos y cantidades contiene una solicitud seleccionada?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-9">
+                                <select name="orden_id" class="form-select" required>
+                                    <option value="">-- Seleccionar Orden / Solicitud --</option>
+                                    {% for o in todas_ordenes %}
+                                    <option value="{{ o.id }}" {% if request.GET.orden_id == o.id|stringformat:"s" %}selected{% endif %}>Orden #{{ o.id }} - {{ o.sucursal.nombre }} ({{ o.fecha_hora|date:"Y-m-d" }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3"><button type="submit" class="btn btn-dark w-100">Ver Contenido</button></div>
+                        </form>
+                        {% if request.GET.orden_id %}
+                        <table class="table table-striped align-middle">
+                            <thead><tr><th>Producto</th><th>Cantidad Solicitada</th></tr></thead>
+                            <tbody>
+                                {% for d in detalles_orden_seleccionada %}
+                                <tr><td>{{ d.producto.nombre }}</td><td><span class="badge bg-primary fs-6">{{ d.cantidad }}</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="2" class="text-center text-muted">La orden no posee detalles registrados.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Cuántas solicitudes se encuentran pendientes, aprobadas, rechazadas o despachadas?
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for c in conteo_por_tipo %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ c.tipo__nombre }}
+                                <span class="badge bg-secondary rounded-pill">{{ c.total }} registros</span>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-center text-muted">No existen movimientos registrados.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-light">
+                        ¿Cuáles son las solicitudes realizadas durante un rango de fechas?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-5"><label class="small fw-bold">Fecha Inicio:</label><input type="date" name="f_inicio" value="{{ request.GET.f_inicio }}" class="form-control" required></div>
+                            <div class="col-md-5"><label class="small fw-bold">Fecha Fin:</label><input type="date" name="f_fin" value="{{ request.GET.f_fin }}" class="form-control" required></div>
+                            <div class="col-md-2 d-flex align-items-end"><button type="submit" class="btn btn-primary w-100">Filtrar</button></div>
+                        </form>
+                        {% if request.GET.f_inicio %}
+                        <table class="table table-bordered align-middle">
+                            <thead><tr><th>ID</th><th>Sucursal</th><th>Fecha</th><th>Tipo</th></tr></thead>
+                            <tbody>
+                                {% for o in ordenes_por_fecha %}
+                                <tr><td>#{{ o.id }}</td><td>{{ o.sucursal.nombre }}</td><td>{{ o.fecha_hora|date:"Y-m-d H:i" }}</td><td>{{ o.tipo.nombre }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center text-muted">Sin registros en este rango de fechas.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-success text-white">
+                        ¿Cuáles son las cinco sucursales que han solicitado la mayor cantidad de productos?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead><tr><th>Sucursal</th><th>Total Unidades Solicitadas</th></tr></thead>
+                            <tbody>
+                                {% for s in top_sucursales %}
+                                <tr><td class="fw-bold">{{ s.orden__sucursal__nombre }}</td><td><span class="badge bg-success">{{ s.total_unidades }} unidades</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="2" class="text-center text-muted py-2">Sin solicitudes registradas.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-info text-dark">
+                        ¿Cuáles son los productos más solicitados por las sucursales?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead><tr><th>SKU</th><th>Producto</th><th>Total Solicitado</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_mas_solicitados %}
+                                <tr><td>{{ p.producto__sku }}</td><td class="fw-bold">{{ p.producto__nombre }}</td><td><span class="badge bg-dark">{{ p.total_solicitado }} unidades</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-2">Sin solicitudes acumuladas.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="avanzado" role="tabpanel">
+                
+                <div class="card report-card">
+                    <div class="card-header bg-dark text-white">
+                        ¿Qué proveedor suministra la mayor cantidad de productos diferentes?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead><tr><th>Marca / Proveedor</th><th>Variedad de Productos Diferentes</th></tr></thead>
+                            <tbody>
+                                {% for m in top_marca_proveedor %}
+                                <tr><td class="fw-bold">{{ m.marca__nombre|default:"Sin Marca" }}</td><td><span class="badge bg-primary fs-6">{{ m.total_productos_diferentes }} productos</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="2" class="text-center text-muted py-2">Sin datos disponibles.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card border-success">
+                    <div class="card-header bg-success text-white">
+                        ¿Cuál es el valor total del inventario, calculado según precio y stock de cada producto?
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <span class="text-muted fw-bold">VALOR ECONÓMICO TOTAL EN BODEGA</span>
+                        <h1 class="display-4 fw-bold text-success my-2">${{ valor_inventario|floatformat:0 }}</h1>
+                        <p class="text-muted mb-0">Sumatoria general: $\sum (\text{Stock Actual} \times \text{Precio})$</p>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-warning text-dark">
+                        ¿Qué productos no han sido solicitados por ninguna sucursal?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead><tr><th>SKU</th><th>Nombre del Producto</th><th>Stock Actual</th></tr></thead>
+                            <tbody>
+                                {% for p in productos_no_solicitados %}
+                                <tr><td>{{ p.sku }}</td><td class="fw-bold">{{ p.nombre }}</td><td>{{ p.stock_actual }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">Todos los productos registrados tienen al menos una solicitud.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-secondary text-white">
+                        ¿Cuántas unidades de cada producto han salido de la bodega durante el último mes?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead><tr><th>SKU</th><th>Producto</th><th>Salidas en los últimos 30 días</th></tr></thead>
+                            <tbody>
+                                {% for item in salidas_ultimo_mes %}
+                                <tr><td>{{ item.producto__sku }}</td><td class="fw-bold">{{ item.producto__nombre }}</td><td><span class="badge bg-danger">{{ item.total_salidas }} unidades</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">No hay registros de salidas en los últimos 30 días.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-danger text-white">
+                        ¿Qué sucursales tienen solicitudes pendientes de atención?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead><tr><th>ID Orden</th><th>Sucursal</th><th>Fecha de Solicitud</th></tr></thead>
+                            <tbody>
+                                {% for s in sucursales_pendientes %}
+                                <tr><td>#{{ s.id }}</td><td class="fw-bold">{{ s.sucursal__nombre }}</td><td>{{ s.fecha_hora|date:"Y-m-d H:i" }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">No hay solicitudes pendientes en este momento.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-primary text-white">
+                        ¿Qué categoría concentra el mayor valor económico del inventario?
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead><tr><th>Categoría</th><th>Valor Económico Total Acumulado</th></tr></thead>
+                            <tbody>
+                                {% for c in categoria_mayor_valor %}
+                                <tr><td class="fw-bold">{{ c.categoria__nombre }}</td><td class="text-success fw-bold">${{ c.valor_total_cat|floatformat:0 }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="2" class="text-center text-muted py-3">Sin registros suficientes.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- REPORTE 19 -->
+                <div class="card report-card bg-light border">
+                    <div class="card-header bg-dark text-white">
+                        📈 Reporte 19 (Análisis): ¿Cuál es el promedio de productos solicitados por solicitud, considerando las cantidades de cada detalle?
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <span class="text-muted fw-bold">PROMEDIO DE UNIDADES POR ÍTEM SOLICITADO</span>
+                        <h2 class="display-5 fw-bold text-primary my-2">{{ promedio_unidades_por_solicitud|floatformat:2 }}</h2>
+                        <p class="text-muted mb-0">Cálculo promedio usando la agregación ORM `Avg('cantidad')`</p>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="card-header bg-dark text-white">
+                        ¿Cuáles son los cinco productos con mayor cantidad de unidades solicitadas durante un período seleccionado?
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" class="row g-2 mb-3">
+                            <div class="col-md-5"><label class="small fw-bold">Fecha Inicio:</label><input type="date" name="f_p20_inicio" value="{{ request.GET.f_p20_inicio }}" class="form-control" required></div>
+                            <div class="col-md-5"><label class="small fw-bold">Fecha Fin:</label><input type="date" name="f_p20_fin" value="{{ request.GET.f_p20_fin }}" class="form-control" required></div>
+                            <div class="col-md-2 d-flex align-items-end"><button type="submit" class="btn btn-dark w-100">Consultar Top 5</button></div>
+                        </form>
+                        {% if request.GET.f_p20_inicio %}
+                        <table class="table table-bordered align-middle">
+                            <thead><tr><th>SKU</th><th>Producto</th><th>Total Unidades Solicitadas</th></tr></thead>
+                            <tbody>
+                                {% for p in top5_productos_periodo %}
+                                <tr><td>{{ p.producto__sku }}</td><td class="fw-bold">{{ p.producto__nombre }}</td><td><span class="badge bg-success fs-6">{{ p.total_unidades }} unidades</span></td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No existen solicitudes registradas en este período.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

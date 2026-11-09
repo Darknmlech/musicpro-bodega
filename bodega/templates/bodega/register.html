@@ -8,6 +8,14 @@
 <body class="bg-light d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4 shadow" style="width: 350px;">
         <h3 class="text-center mb-3">Crear Cuenta</h3>
+
+        <!-- Muestra el error si el correo ya existe u ocurre un fallo -->
+        {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <form method="POST">
             {% csrf_token %}
             <div class="mb-3">

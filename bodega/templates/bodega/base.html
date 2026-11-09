@@ -25,9 +25,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'movimientos' %}">Movimientos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reportes' %}">Reportes</a>
+                    </li>
                 </ul>
                 
-                <!-- Usuario dinámico y botón de salida -->
                 <div class="d-flex align-items-center">
                     <span class="navbar-text me-3 text-white">
                         Usuario: <strong>{{ usuario_nombre }}</strong>
@@ -40,7 +42,6 @@
 
     <div class="container">
         {% block content %}
-        <!-- Aquí se cargará el contenido de cada página -->
         {% endblock %}
     </div>
 

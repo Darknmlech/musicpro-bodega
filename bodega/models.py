@@ -1,24 +1,26 @@
 from django.db import models
 
 # Create your models here.
-from django.db import models
 
 class Ubicacion(models.Model):
     zona = models.CharField(max_length=50)
     pasillo = models.CharField(max_length=50)
     estante = models.CharField(max_length=50)
+    
     def __str__(self):
         return f"Zona {self.zona} - Pasillo {self.pasillo}"
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
+    
     def __str__(self):
         return self.nombre
 
 class Marca(models.Model):
     nombre = models.CharField(max_length=100)
     contacto = models.CharField(max_length=100, blank=True, null=True)
+    
     def __str__(self):
         return self.nombre
 
@@ -31,11 +33,13 @@ class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
     ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
+    
     def __str__(self):
         return f"[{self.sku}] {self.nombre}"
 
 class Rol(models.Model):
     nombre = models.CharField(max_length=50)
+    
     def __str__(self):
         return self.nombre
 
@@ -45,6 +49,7 @@ class Usuario(models.Model):
     contrasena = models.CharField(max_length=128)
     estado_activo = models.BooleanField(default=True)
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.nombre_completo
 
@@ -52,12 +57,14 @@ class Sucursal(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
     telefono = models.CharField(max_length=20)
+    
     def __str__(self):
         return self.nombre
 
 class TipoMovimiento(models.Model):
     nombre = models.CharField(max_length=50)
     operacion = models.CharField(max_length=10)
+    
     def __str__(self):
         return self.nombre
 
@@ -72,3 +79,4 @@ class DetalleOrden(models.Model):
     cantidad = models.IntegerField()
     orden = models.ForeignKey(OrdenMovimiento, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, to_field='sku')
+    

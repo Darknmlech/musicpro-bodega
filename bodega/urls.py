@@ -3,7 +3,8 @@ from .views import (
     dashboard_view, inventario_view, movimientos_view, 
     login_view, register_view, logout_view,
     usuarios_list_view, usuario_create_view, usuario_edit_view, usuario_toggle_active_view,
-    producto_create_view, producto_edit_view, producto_delete_view
+    producto_create_view, producto_edit_view, producto_delete_view,
+    reportes_view
 )
 
 urlpatterns = [
@@ -13,6 +14,8 @@ urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
     path('inventario/', inventario_view, name='inventario'),
     path('movimientos/', movimientos_view, name='movimientos'),
+    
+    path('reportes/', reportes_view, name='reportes'),
     
     path('usuarios/', usuarios_list_view, name='usuarios_list'),
     path('usuarios/crear/', usuario_create_view, name='usuario_create'),
