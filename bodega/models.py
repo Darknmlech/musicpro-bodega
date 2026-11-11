@@ -31,8 +31,8 @@ class Producto(models.Model):
     stock_minimo = models.IntegerField(default=5)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
-    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
-    ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE)
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE, null=True, blank=True)
+    ubicacion = models.ForeignKey(Ubicacion, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f"[{self.sku}] {self.nombre}"
